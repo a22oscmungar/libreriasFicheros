@@ -34,6 +34,25 @@ public class librerias {
 // <editor-fold defaultstate="collapsed" desc="Implementació de LlegirInt()">
 
     private static Scanner scan=null;
+    
+    static class Cliente {
+
+    int codi;
+    String nom;
+    String cognoms;
+    int DiaNaixement;
+    int MesNaixement;
+    int AnyNaixement;
+    String AdrecaPostal;
+    String mail;
+    boolean VIP;
+}
+    static class index {
+
+    long posicio;
+    int codi;
+    boolean marca;
+}
        
     
     public static int LlegirInt() {
@@ -353,13 +372,25 @@ public class librerias {
     public static Cliente PedirDatosCliente() {
         Cliente c = new Cliente();
         System.out.print("Codi: ");
-        c.codi = scan.nextLine();
-        if (!c.codi.equals("")) {
-            System.out.print("Nom: ");c.nom = scan.nextLine();
-            System.out.print("Cognom: ");c.cognom = scan.nextLine();
-            System.out.print("Adreça: ");c.adreca = scan.nextLine();
-            System.out.print("DataNaixement: ");c.dataNaixement = scan.nextLine();
-            System.out.print("e-Mail: ");c.mail = scan.nextLine();
+        c.codi = scan.nextInt();
+        if (c.codi!=0) {
+           System.out.print("Nom: ");
+            c.nom = scan.nextLine();
+            System.out.print("Cognoms: ");
+            c.cognoms = scan.nextLine();
+            System.out.print("DiaNaixement: ");
+            c.DiaNaixement = scan.nextInt();
+            System.out.print("MesNaixement: ");
+            c.MesNaixement = scan.nextInt();
+            System.out.print("AnyNaixement: ");
+            c.AnyNaixement = scan.nextInt();
+            scan.nextLine();
+            System.out.print("Adreça postal: ");
+            c.AdrecaPostal = scan.nextLine();
+            System.out.print("e-Mail: ");
+            c.mail = scan.nextLine();
+            System.out.print("VIP: ");
+            c.VIP = scan.nextBoolean();
         } else {
             c = null;
         }
@@ -377,10 +408,13 @@ public class librerias {
         
         result += cli.codi + "_";
         result += cli.nom  + "_";
-        result += cli.cognom + "_";
-        result += cli.dataNaixement + "_";
-        result += cli.adreca + "_";
-        result += cli.mail;
+        result += cli.cognoms + "_";
+        result += cli.DiaNaixement +"_";
+        result += cli.MesNaixement +"_";
+        result += cli.AnyNaixement +"_";
+        result += cli.AdrecaPostal +"_";
+        result += cli.mail+"_";
+        result += cli.VIP;
         
         return result;
     }
@@ -394,19 +428,19 @@ public class librerias {
       */
      public static void LeerClientesCodigoSep() {
         System.out.print("Introduce el código del cliente a buscar: ");
-        String codigoBuscar = scan.nextLine();
+        int codigoBuscar = scan.nextInt();
 
         // Creamos el enlace con el fichero en el disco para leer
         BufferedReader buf = AbrirFicheroLectura("Aqui va el nombre del fichero", true);
 
         String linea = LeerLinea(buf);
         Cliente cli = FormatearFicheroClienteSep(linea);
-        while (cli != null && !cli.codi.equals(codigoBuscar)) {
+        while (cli != null && cli.codi!=0) {
             linea = LeerLinea(buf);
             cli = FormatearFicheroClienteSep(linea);
         }
 
-        if (cli != null && cli.codi.equals(codigoBuscar))
+        if (cli != null && cli.codi != codigoBuscar)
             EscribirDatosCliente(cli);
         
         CerrarFichero(buf);
@@ -445,10 +479,13 @@ public class librerias {
      public static void EscribirDatosCliente(Cliente c) {
         System.out.println("Codi: " + c.codi);
         System.out.println("Nom: " + c.nom);
-        System.out.println("Cognom: " + c.cognom);
-        System.out.println("Adreça: " + c.adreca);
-        System.out.println("Data Naixement: " + c.dataNaixement);
+        System.out.println("Cognoms: " + c.cognoms);
+        System.out.println("Dia Naixement: " + c.DiaNaixement);
+        System.out.println("Mes Naixement: " + c.MesNaixement);
+        System.out.println("Any Naixement: " + c.AnyNaixement);
+        System.out.println("Adreça postal: " + c.AdrecaPostal);
         System.out.println("e-mail: " + c.mail);
+        System.out.println("VIP: " + c.VIP);
 
     }
      
@@ -513,17 +550,17 @@ public class librerias {
         try {
             cli.codi = dis.readInt();
             cli.nom = dis.readUTF();
-            cli.cognom= dis.readUTF();
-            cli.dataNaixement= new SimpleDateFormat("dd/MM/yyyy").parse(dis.readUTF());
-            cli.adreca= dis.readUTF();
-            cli.mail= dis.readUTF();
-            cli.saldo= dis.readFloat();
+            cli.cognoms = dis.readUTF();
+            cli.DiaNaixement = dis.readInt();
+            cli.MesNaixement = dis.readInt();
+            cli.AnyNaixement = dis.readInt();
+            cli.AdrecaPostal = dis.readUTF();
+            cli.mail = dis.readUTF();
+            cli.VIP = dis.readBoolean();
 
         } catch (IOException ex) {
             cli = null;
-        } catch (ParseException ex) {
-            Logger.getLogger(librerias.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         return cli;
     }
      /**
@@ -558,6 +595,28 @@ public class librerias {
         
         CerrarFicheroBinario(dos);
         
+    }
+     /**
+      * Funcion para escribir en el archivo binario los datos que se nos han introducido del cliente
+      * @param dos
+      * @param cli 
+      */
+      public static void GrabarDatosClienteBinario(DataOutputStream dos, Cliente cli) {
+
+        try {
+            dos.writeInt(cli.codi);
+            dos.writeUTF(cli.nom);
+            dos.writeUTF(cli.cognoms);
+            dos.writeInt(cli.DiaNaixement);
+            dos.writeInt(cli.MesNaixement);
+            dos.writeInt(cli.AnyNaixement);
+            dos.writeUTF(cli.AdrecaPostal);
+            dos.writeUTF(cli.mail);
+            dos.writeBoolean(cli.VIP);
+        } catch (IOException ex) {
+            Logger.getLogger(librerias.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
      /**
       * esta funcion nos sirve para iniciar el DataOutput y poder escribir en
@@ -679,14 +738,14 @@ public class librerias {
             int posicionBuscar = scan.nextInt();
 
             DataInputStream dis = AbrirFicheroLecturaBinario("Aqui va el nombre del indice", true);
-            RandomAccessFile RAF = new RandomAccessFile("Aqui va el nombre del indice", "rw");
+            RandomAccessFile RAF = new RandomAccessFile("Aqui va el nombre del fichero", "rw");
             index idx = LeerDatosIndexBinario(posicionBuscar);
 
             while (idx != null) {
 
                 try {
                     Cliente cli = new Cliente();
-                    dis = LlegirBinari("Aqui va el nombre del fichero", true);
+                    dis = AbrirFicheroLecturaBinario("Aqui va el nombre del archivo",true);
                     RAF = new RandomAccessFile("Aqui va el nombre del fichero", "rw");
                     RAF.seek(idx.posicio);
                     cli = LeerDatosClienteIndice(RAF);
@@ -726,6 +785,83 @@ public class librerias {
         } catch (IOException ex) {
             Logger.getLogger(librerias.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return idx;
+    }
+     /**
+      * Una vez nos hemos movido a la posicion que queremos, vamos a usar el raf
+      * para leer el cliente que nos interesa
+      * @param RAF le pasamos el raf para que pueda leer en la posicion indicada
+      * @return nos devolverá el registro cliente con toda la informacion
+      */
+     public static Cliente LeerDatosClienteIndice(RandomAccessFile RAF) {
+        Cliente cli = new Cliente();
+
+        try {
+            cli.codi = RAF.readInt();
+            cli.nom = RAF.readUTF();
+            cli.cognoms = RAF.readUTF();
+            cli.DiaNaixement = RAF.readInt();
+            cli.MesNaixement = RAF.readInt();
+            cli.AnyNaixement = RAF.readInt();
+            cli.AdrecaPostal = RAF.readUTF();
+            cli.mail = RAF.readUTF();
+            cli.VIP = RAF.readBoolean();
+
+        } catch (IOException ex) {
+            cli = null;
+        }
+        return cli;
+    }
+     
+     public static void SaberCodigoBinario() {
+
+        try {
+
+            System.out.print("Introdueix el codi del client a buscar: ");
+            int codigoBuscar = scan.nextInt();
+
+            DataInputStream dis = AbrirFicheroLecturaBinario("Aqui va el nombre del indice", true);
+            RandomAccessFile RAF = new RandomAccessFile("Aqui va el nombre del fichero", "rw");
+            index idx = LeerDatosIndexBinario(codigoBuscar);
+            while (idx != null) {
+                if (idx.codi != codigoBuscar) {
+                    idx = LeerDatosCliCodiIndex(dis);
+                } else {
+                    try {
+                        Cliente cli = new Cliente();
+                        dis = AbrirFicheroLecturaBinario("Aqui va el nombre del archivo", true);
+                        RAF = new RandomAccessFile("Aqui va el nombre del fichero", "rw");
+                        RAF.seek(idx.posicio);
+                        cli = LeerDatosClienteIndice(RAF);
+                        EscribirDatosCliente(cli);
+                        idx = LeerDatosCliCodiIndex(dis);
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(librerias.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            }
+
+            CerrarFicheroBinario(dis);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(librerias.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
+     public static index LeerDatosCliCodiIndex(DataInputStream dis) {
+        index idx = new index();
+        
+        try {
+            RandomAccessFile RAF = new RandomAccessFile("Aqui va el nombre del fichero", "rw");
+            idx.posicio = RAF.readLong();
+            idx.codi = RAF.readInt();
+            idx.marca = RAF.readBoolean();
+
+        } catch (IOException ex) {
+            idx = null;
+        }
+
         return idx;
     }
 // </editor-fold>
