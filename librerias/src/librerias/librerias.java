@@ -35,7 +35,6 @@ public class librerias {
 
     private static Scanner scan = null;
 
-    
     static class Cliente {
 
         int codi;
@@ -55,57 +54,20 @@ public class librerias {
         int codi;
         boolean marca;
     }
-
-    public static int LlegirInt() {
+    /**
+     * Funcion para pedir un numero entero
+     * @return nos devolverá un número entero válido
+     */
+    static int Entero() {
         int result;
 
-        if (scan == null) {
-            scan = new Scanner(System.in);
+        System.out.println("Introdueix un numero enter: ");
+        while (!scan.hasNextInt()) {
+
+            scan.next();
         }
-        result = LlegirInt(scan);
 
-        return result;
-    }
-
-    public static int LlegirInt(String missatge) {
-        int result;
-
-        if (scan == null) {
-            scan = new Scanner(System.in);
-        }
-        result = LlegirInt(scan, missatge);
-
-        return result;
-    }
-
-    public static int LlegirInt(Scanner scan) {
-        return LlegirInt(scan, null);
-    }
-
-    public static int LlegirInt(Scanner scan, String missatge, int valorMin, int valorMax) {
-        int result = 0;
-        do {
-            result = LlegirInt(scan, missatge);
-        } while (result < valorMin || result > valorMax);
-
-        return result;
-    }
-
-    public static int LlegirInt(Scanner scan, String missatge) {
-        boolean dadesCorrectes;
-        int result = 0;
-        do {
-            if (missatge != null) {
-                System.out.print(missatge);
-            }
-            dadesCorrectes = scan.hasNextInt();
-            if (dadesCorrectes) {
-                result = scan.nextInt();
-            } else if (scan.hasNext()) {
-                scan.nextLine();
-            }
-        } while (!dadesCorrectes);
-
+        result = scan.nextInt();
         return result;
     }
 
@@ -143,7 +105,7 @@ public class librerias {
         return result;
     }
 
-     /**
+    /**
      * Esta funcion nos sirve para leer una linea de un archivo de texto
      *
      * @param br le pasamos el bufferedReader que hemos abierto antes
@@ -160,7 +122,7 @@ public class librerias {
 
         return linea;
     }
-    
+
     //PARA LEER EL ARCHIVO DE TEXTO:
     /**
      * Esta funcion nos sirve para leer un archivo de texto linea por linea
@@ -210,7 +172,6 @@ public class librerias {
         return br;
     }
 
-   
     /**
      * Esta funcion nos sirve para, una vez hemos acabado de leer el archivo de
      * texto, cerrarlo y que deje de consumir
@@ -234,7 +195,7 @@ public class librerias {
     public static String PedirLineaTeclado() {
         return scan.nextLine();
     }
-    
+
     /**
      * funcion que usa el printWriter para escribir la información en el
      * archivo, podemos hacer directamente el print en la otra funcion pero como
@@ -246,8 +207,7 @@ public class librerias {
     public static void EscribirLinea(PrintWriter pw, String linea) {
         pw.println(linea);
     }
-    
-    
+
     //PARA ESCRIBIR EN UN ARCHIVO DE TEXTO:
     /**
      * Esta es la funcion base para escribir en un fichero de texto, que lo que
@@ -301,7 +261,6 @@ public class librerias {
 
         return pw;
     }
-    
 
     /**
      * funcion que nos sirve para cerrar el PrintWriter que hemos usado para
@@ -481,7 +440,8 @@ public class librerias {
 
     /**
      * Esta funcion nos separa el cliente que hayamos usado teniendo en cuenta
-     * el separador que hayamos utilizado. Escribe los datos sin el separador (#)
+     * el separador que hayamos utilizado. Escribe los datos sin el separador
+     * (#)
      *
      * @param str
      * @return
@@ -497,8 +457,8 @@ public class librerias {
             cli.nom = campos[1];
             cli.cognoms = campos[2];
             cli.DiaNaixement = Integer.parseInt(campos[3]);
-            cli.MesNaixement= Integer.parseInt(campos[4]);
-            cli.AnyNaixement= Integer.parseInt(campos[5]);
+            cli.MesNaixement = Integer.parseInt(campos[4]);
+            cli.AnyNaixement = Integer.parseInt(campos[5]);
             cli.AdrecaPostal = campos[6];
             cli.mail = campos[7];
         } else {
